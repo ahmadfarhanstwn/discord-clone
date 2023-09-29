@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import qs from 'query-string'
 import axios from "axios";
+import { useModal } from "../../hooks/useModal";
 
 interface ChatItemProps {
     id: string;
@@ -43,7 +44,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
     id, content, member, timestamp, fileUrl, deleted, currentMember, isUpdated, socketUrl, socketQuery
 }) => {
     const [isUpdating, setIsUpdating] = useState(false)
-    const [isDeleting, setIsDeleting] = useState(false)
+    const { onOpen } = useModal()
     
     const isAdmin = currentMember.role === MemberRole.ADMIN
     const isModerator = currentMember.role === MemberRole.MODERATOR
@@ -175,7 +176,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
                         </ActionTooltip>
                     )}
                     <ActionTooltip label="Delete">
-                        <Trash className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                        <Trash onClick={() => onOpen("deleteMessage", {apiUrl: `${socketUrl}/${id}`, query: socketQuery})} className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
                     </ActionTooltip>
                 </div>
             )}
