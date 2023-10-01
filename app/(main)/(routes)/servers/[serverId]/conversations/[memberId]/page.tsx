@@ -5,6 +5,8 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { findOrCreateConversation } from "../../../../../../../lib/conversations";
 import ChatHeader from "../../../../../../../components/chats/ChatHeader";
+import ChatMessages from "../../../../../../../components/chats/ChatMessages";
+import ChatInput from "../../../../../../../components/chats/ChatInput";
 
 interface MemberIdPageProps {
     params : {
@@ -45,6 +47,25 @@ const MemberIdPage: React.FC<MemberIdPageProps> = async ({params}) => {
                 serverId={params.serverId} 
                 type="conversation" 
                 imageUrl={otherMember.profile.imageUrl} 
+            />
+            <ChatMessages 
+                apiUrl="/api/direct-messages"
+                chatId={conversation.id}
+                member={currentMember}
+                name={otherMember.profile.name}
+                paramKey="conversationId"
+                paramValue={conversation.id}
+                socketQuery={{
+                    conversationId: conversation.id
+                }}
+                socketUrl="/api/socket/direct-messages"
+                type="conversation"
+            />
+            <ChatInput 
+                apiUrl="/api/socket/direct-messages"
+                name={otherMember.profile.name}
+                query={{conversationId: conversation.id}}
+                type="conversation"
             />
         </div>
      );
